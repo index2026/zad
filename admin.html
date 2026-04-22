@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم مكتبة زاد</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* المتغيرات الأساسية */
+        :root { 
+            --primary: #1A3626; --gold: #D4AF37; --danger: #e74c3c; --success: #2ecc71;
+            --bg-body: #f4f7f6; --bg-card: #ffffff; --text-main: #333333; --border: #eeeeee;
+            --sidebar-bg: #1A3626; --sidebar-text: #ffffff;
+        }
+
+        /* الوضع الليلي */
+        [data-theme="dark"] {
+            --primary: #0f1e15; --gold: #D4AF37; --danger: #ff6b81; --success: #2ed573;
+            --bg-body: #121212; --bg-card: #1e1e1e; --text-main: #f4f7f6; --border: #333333;
+            --sidebar-bg: #0a140e; --sidebar-text: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        body { background: var(--bg-body); color: var(--text-main); display: flex; min-height: 100vh; overflow-x: hidden; }
+
+        /* القائمة الجانبية */
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: var(--sidebar-text); padding: 20px 0; display: flex; flex-direction: column; box-shadow: 4px 0 15px rgba(0,0,0,0.1); z-index: 100; }
+        .sidebar-logo { text-align: center; font-size: 1.8rem; font-weight: 900; color: var(--gold); margin-bottom: 30px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 10px;}
+        .sidebar-logo i { font-size: 2.5rem; }
+        
+        .nav-item { padding: 15px 25px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.6); font-weight: 600; border-right: 4px solid transparent; }
+        .nav-item:hover, .nav-item.active { background: rgba(212, 175, 55, 0.1); color: var(--gold); border-right-color: var(--gold); }
+        .return-link { margin-top: auto; padding: 15px 25px; color: #aaa; text-decoration: none; display: flex; align-items: center; gap: 12px; font-weight: 600; transition: 0.3s; }
+        .return-link:hover { color: white; background: rgba(255,255,255,0.05); }
+
+        /* المحتوى الرئيسي */
+        .main-content { flex: 1; padding: 40px; overflow-y: auto; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid var(--border); padding-bottom: 15px; }
+        .section-header h2 { font-weight: 900; display: flex; align-items: center; gap: 10px; }
+        
+        .theme-toggle { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-main); padding: 10px 15px; border-radius: 50px; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; gap: 8px; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .theme-toggle:hover { color: var(--gold); border-color: var(--gold); }
+
+        /* الكروت والنماذج */
+        .card { background: var(--bg-card); border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid var(--border); }
+        .card h3 { margin-bottom: 25px; color: var(--gold); border-bottom: 1px dashed var(--border); padding-bottom: 10px; display: inline-block; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .full-width { grid-column: span 2; }
+        label { display: block; font-weight: 700; margin-bottom: 10px; color: var(--text-main); font-size: 0.95rem; }
+        
+        /* أضفنا الـ select هنا لتأخذ نفس تصميم الحقول */
+        input[type="text"], input[type="number"], input[type="file"], select { width: 100%; padding: 12px 15px; border: 2px solid var(--border); border-radius: 10px; outline: none; background: var(--bg-body); color: var(--text-main); font-weight: 600; transition: 0.3s; font-family: 'Cairo', sans-serif; cursor: pointer; }
+        input:focus, select:focus { border-color: var(--gold); background: var(--bg-card); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1); }
+        
+        .btn { padding: 12px 25px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.3s; color: white; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
+        .btn-success { background: var(--success); }
+        .btn-primary { background: linear-gradient(45deg, var(--primary), #2c5c41); }
+        .btn-warning { background: #f39c12; }
+        
+        .image-preview { width: 120px; height: 120px; border: 2px dashed var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-top: 15px; background: var(--bg-body); }
+        .image-preview img { width: 100%; height: 100%; object-fit: cover; display: none; }
+
+        /* القوائم */
+        .data-list { display: flex; flex-direction: column; gap: 15px; }
+        .data-item { display: flex; align-items: center; justify-content: space-between; background: var(--bg-card); padding: 15px 20px; border-radius: 12px; border: 1px solid var(--border); box-shadow: 0 4px 10px rgba(0,0,0,0.02); transition: 0.3s; }
+        .data-item:hover { border-color: var(--gold); transform: translateX(-5px); }
+        .item-info { display: flex; align-items: center; gap: 20px; }
+        .item-info img { width: 70px; height: 70px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border); }
+        .old-price-text { text-decoration: line-through; color: var(--danger); font-size: 0.9em; margin-left: 5px; }
+        
+        /* تصميم تاج التصنيف */
+        .category-tag { background: var(--gold); color: var(--primary); padding: 3px 10px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; margin-bottom: 5px; display: inline-block; }
+
+        .action-btn { background: var(--bg-body); border: 1px solid var(--border); padding: 10px; border-radius: 8px; cursor: pointer; color: var(--text-main); transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; }
+        .action-btn:hover { background: var(--gold); color: white; border-color: var(--gold); }
+        .action-btn.del:hover { background: var(--danger); color: white; border-color: var(--danger); }
+        .item-actions { display: flex; gap: 8px; }
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* إشعارات Toast */
+        #toast { visibility: hidden; min-width: 250px; background-color: var(--success); color: white; text-align: center; border-radius: 8px; padding: 16px; position: fixed; z-index: 1000; left: 30px; bottom: 30px; font-weight: bold; font-size: 1.1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); transform: translateY(100px); transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); display: flex; align-items: center; gap: 10px; }
+        #toast.show { visibility: visible; transform: translateY(0); }
+        #toast.error { background-color: var(--danger); }
+
+        /* التجاوب مع الموبايل */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; justify-content: space-between; padding: 10px 20px; align-items: center; }
+            .sidebar-logo { margin: 0; padding: 0; border: none; font-size: 1.2rem; flex-direction: row; }
+            .sidebar-logo i { font-size: 1.5rem; }
+            .nav-item { padding: 10px; border: none; border-bottom: 3px solid transparent; }
+            .nav-item:hover, .nav-item.active { border-right-color: transparent; border-bottom-color: var(--gold); }
+            .return-link { margin: 0; padding: 10px; }
+            .main-content { padding: 20px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: 1; }
+            .data-item { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .item-actions { width: 100%; justify-content: flex-end; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-logo"><i class="fas fa-chart-line"></i><span>إدارة زاد</span></div>
+        <div style="display: flex; flex-direction: inherit; width: 100%;">
+            <div class="nav-item active" onclick="switchTab('products')"><i class="fas fa-box-open"></i> الباقات والعروض</div>
+            <div class="nav-item" onclick="switchTab('reviews')"><i class="fas fa-star"></i> سكرين الآراء</div>
+        </div>
+        <a href="index.html" class="return-link"><i class="fas fa-external-link-alt"></i> عرض الموقع</a>
+    </div>
+
+    <div class="main-content">
+        <div class="section-header">
+            <h2><i class="fas fa-cogs" style="color: var(--gold);"></i> لوحة التحكم</h2>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+
+        <div id="products-tab" class="tab-content active">
+            <div class="card">
+                <h3 id="product-form-title"><i class="fas fa-plus-circle"></i> إضافة باقة جديدة</h3>
+                <input type="hidden" id="edit-id" value="">
+                
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label>اسم المنتج / الباقة</label>
+                        <input type="text" id="pTitle" placeholder="مثال: باقة الحركة والنشاط الشاملة">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>تصنيف الباقة (سيظهر المنتج داخل هذا القسم في الموقع)</label>
+                        <select id="pCategory">
+                            <option value="عروض 99 جنيهاً">عروض 99 جنيهاً</option>
+                            <option value="عروض 149 جنيهاً">عروض 149 جنيهاً</option>
+                            <option value="الباقات الشاملة والأكثر مبيعاً">الباقات الشاملة والأكثر مبيعاً</option>
+                            <option value="عروض أخرى">عروض أخرى (إضافية)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>السعر الأساسي (بالجنيه)</label>
+                        <input type="number" id="pPrice" placeholder="مثال: 149">
+                    </div>
+                    <div class="form-group">
+                        <label>السعر قبل الخصم (سيظهر مشطوب)</label>
+                        <input type="number" id="pOldPrice" placeholder="مثال: 300">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>صورة المنتج الإعلانية</label>
+                        <input type="file" id="pImage" accept="image/*" onchange="previewImage(this, 'pPreview')">
+                        <div class="image-preview"><img id="pPreview" src=""><span id="pPreviewText" style="color:var(--text-main);opacity:0.5;">معاينة</span></div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="btn btn-success" onclick="saveProduct()"><i class="fas fa-save"></i> حفظ التعديلات</button>
+                    <button class="btn btn-warning" id="cancel-edit" style="display:none;" onclick="resetProductForm()"><i class="fas fa-times"></i> إلغاء</button>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 15px; color: var(--text-main);">الباقات الحالية بالموقع:</h3>
+            <div class="data-list" id="productsList"></div>
+        </div>
+
+        <div id="reviews-tab" class="tab-content">
+            <div class="card">
+                <h3><i class="fas fa-upload"></i> رفع محادثة / سكرين شوت</h3>
+                <div class="form-grid" style="grid-template-columns: 1fr;">
+                    <div class="form-group">
+                        <label>اسم العميل (اختياري)</label>
+                        <input type="text" id="rName" placeholder="مثال: د. أحمد مصطفى">
+                    </div>
+                    <div class="form-group">
+                        <label>رفع صورة المحادثة</label>
+                        <input type="file" id="rImage" accept="image/*" onchange="previewImage(this, 'rPreview')">
+                        <div class="image-preview" style="width: 100px; height: 180px;"><img id="rPreview" src=""><span id="rPreviewText" style="color:var(--text-main);opacity:0.5;">معاينة</span></div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="saveReview()"><i class="fas fa-cloud-upload-alt"></i> نشر الرأي بالموقع</button>
+            </div>
+
+            <h3 style="margin-bottom: 15px; color: var(--text-main);">الآراء المنشورة:</h3>
+            <div class="data-list" id="reviewsList"></div>
+        </div>
+    </div>
+
+    <div id="toast"><i class="fas fa-check-circle"></i> <span id="toast-msg">تمت العملية بنجاح</span></div>
+
+    <script>
+        let products = JSON.parse(localStorage.getItem('zad_products')) || [];
+        let reviews = JSON.parse(localStorage.getItem('zad_reviews')) || [];
+
+        // --- نظام الوضع الليلي ---
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('themeBtn').querySelector('i');
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme'); icon.className = 'fas fa-moon'; localStorage.setItem('admin_theme', 'light');
+            } else {
+                body.setAttribute('data-theme', 'dark'); icon.className = 'fas fa-sun'; localStorage.setItem('admin_theme', 'dark');
+            }
+        }
+        if (localStorage.getItem('admin_theme') === 'dark') { 
+            document.body.setAttribute('data-theme', 'dark'); document.getElementById('themeBtn').querySelector('i').className = 'fas fa-sun'; 
+        }
+
+        // --- نظام الإشعارات Toast ---
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById("toast");
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            toast.className = type; 
+            toast.innerHTML = `<i class="fas ${icon}"></i> <span>${message}</span>`;
+            toast.classList.add("show");
+            setTimeout(() => { toast.classList.remove("show"); }, 3000);
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(tabId + '-tab').classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        function previewImage(input, imgId) {
+            const preview = document.getElementById(imgId);
+            const text = document.getElementById(imgId + 'Text');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => { preview.src = e.target.result; preview.style.display = 'block'; if(text) text.style.display = 'none'; }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // --- المنتجات ---
+        function renderProducts() {
+            const list = document.getElementById('productsList');
+            list.innerHTML = '';
+            if(products.length === 0) list.innerHTML = '<p style="text-align:center; color:var(--text-main); opacity:0.5;">لا توجد باقات مضافة حتى الآن.</p>';
+            
+            products.forEach((p, index) => {
+                const imgSrc = p.img || 'https://via.placeholder.com/60';
+                let priceHtml = `<strong style="color:var(--success); font-size:1.1rem;">${p.price} ج</strong>`;
+                if(p.oldPrice) priceHtml = `<span class="old-price-text">${p.oldPrice} ج</span> ` + priceHtml;
+
+                // تحديث العرض هنا ليظهر التاج بتاع التصنيف
+                list.innerHTML += `
+                    <div class="data-item">
+                        <div class="item-info">
+                            <img src="${imgSrc}">
+                            <div>
+                                <span class="category-tag">${p.category || 'عروض 99 جنيهاً'}</span><br>
+                                <strong style="font-size:1.1rem; color:var(--gold);">${p.title}</strong><br>
+                                ${priceHtml}
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn" title="تحريك لأعلى" onclick="moveProduct(${index}, -1)"><i class="fas fa-arrow-up"></i></button>
+                            <button class="action-btn" title="تحريك لأسفل" onclick="moveProduct(${index}, 1)"><i class="fas fa-arrow-down"></i></button>
+                            <button class="action-btn" title="تعديل" onclick="editProduct(${index})"><i class="fas fa-edit"></i></button>
+                            <button class="action-btn del" title="حذف" onclick="deleteProduct(${index})"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>`;
+            });
+            localStorage.setItem('zad_products', JSON.stringify(products));
+        }
+
+        function saveProduct() {
+            const id = document.getElementById('edit-id').value;
+            const title = document.getElementById('pTitle').value;
+            const category = document.getElementById('pCategory').value; // سحب قيمة التصنيف
+            const price = document.getElementById('pPrice').value;
+            const oldPrice = document.getElementById('pOldPrice').value;
+            const file = document.getElementById('pImage').files[0];
+            const previewSrc = document.getElementById('pPreview').src;
+
+            if(!title || !price) return showToast('يرجى إدخال اسم وسعر الباقة!', 'error');
+
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = e => finishSave(id, title, category, price, oldPrice, e.target.result);
+                reader.readAsDataURL(file);
+            } else {
+                finishSave(id, title, category, price, oldPrice, (id !== "" && previewSrc.includes('data:image')) ? previewSrc : "");
+            }
+        }
+
+        function finishSave(id, title, category, price, oldPrice, img) {
+            if(id !== "") {
+                products[id] = { ...products[id], title, category, price, oldPrice };
+                if(img) products[id].img = img;
+                showToast('تم تعديل الباقة بنجاح');
+            } else {
+                products.push({ id: Date.now(), title, category, price, oldPrice, img });
+                showToast('تمت إضافة الباقة الجديدة');
+            }
+            resetProductForm();
+            renderProducts();
+        }
+
+        function editProduct(i) {
+            const p = products[i];
+            document.getElementById('edit-id').value = i;
+            document.getElementById('pTitle').value = p.title;
+            document.getElementById('pCategory').value = p.category || "عروض 99 جنيهاً"; // تحميل التصنيف
+            document.getElementById('pPrice').value = p.price;
+            document.getElementById('pOldPrice').value = p.oldPrice || "";
+            document.getElementById('product-form-title').innerHTML = "<i class='fas fa-edit'></i> تعديل الباقة";
+            document.getElementById('cancel-edit').style.display = "inline-flex";
+            if(p.img) {
+                document.getElementById('pPreview').src = p.img;
+                document.getElementById('pPreview').style.display = 'block';
+                document.getElementById('pPreviewText').style.display = 'none';
+            }
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function resetProductForm() {
+            document.getElementById('edit-id').value = "";
+            document.getElementById('pTitle').value = "";
+            document.getElementById('pCategory').value = "عروض 99 جنيهاً"; // إرجاع للافتراضي
+            document.getElementById('pPrice').value = "";
+            document.getElementById('pOldPrice').value = "";
+            document.getElementById('pImage').value = "";
+            document.getElementById('pPreview').style.display = "none";
+            document.getElementById('pPreviewText').style.display = "block";
+            document.getElementById('product-form-title').innerHTML = "<i class='fas fa-plus-circle'></i> إضافة باقة جديدة";
+            document.getElementById('cancel-edit').style.display = "none";
+        }
+
+        function deleteProduct(i) { 
+            if(confirm('هل أنت متأكد من حذف هذه الباقة نهائياً؟')) { 
+                products.splice(i, 1); 
+                renderProducts(); 
+                showToast('تم الحذف بنجاح');
+            } 
+        }
+
+        function moveProduct(i, dir) { 
+            if(i + dir < 0 || i + dir >= products.length) return;
+            [products[i], products[i+dir]] = [products[i+dir], products[i]];
+            renderProducts();
+        }
+
+        // --- الآراء ---
+        function renderReviews() {
+            const list = document.getElementById('reviewsList');
+            list.innerHTML = '';
+            if(reviews.length === 0) list.innerHTML = '<p style="text-align:center; color:var(--text-main); opacity:0.5;">لا توجد آراء مضافة حتى الآن.</p>';
+
+            reviews.forEach((r, i) => {
+                list.innerHTML += `
+                    <div class="data-item">
+                        <div class="item-info">
+                            <img src="${r.img}" style="width: 50px; height: 90px; cursor: pointer;" onclick="window.open('${r.img}')" title="معاينة الصورة">
+                            <div><strong style="color:var(--gold);">${r.name || 'بدون اسم'}</strong></div>
+                        </div>
+                        <button class="action-btn del" onclick="deleteReview(${i})"><i class="fas fa-trash"></i> حذف</button>
+                    </div>`;
+            });
+            localStorage.setItem('zad_reviews', JSON.stringify(reviews));
+        }
+
+        function saveReview() {
+            const name = document.getElementById('rName').value;
+            const file = document.getElementById('rImage').files[0];
+            if(!file) return showToast('يرجى اختيار صورة المحادثة أولاً!', 'error');
+            
+            const reader = new FileReader();
+            reader.onload = e => {
+                reviews.push({ id: Date.now(), name, img: e.target.result });
+                document.getElementById('rName').value = "";
+                document.getElementById('rImage').value = "";
+                document.getElementById('rPreview').style.display = "none";
+                document.getElementById('rPreviewText').style.display = "block";
+                renderReviews();
+                showToast('تم نشر رأي العميل بنجاح');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function deleteReview(i) { 
+            if(confirm('حذف هذا الرأي من الموقع؟')) { 
+                reviews.splice(i, 1); 
+                renderReviews(); 
+                showToast('تم حذف الرأي');
+            } 
+        }
+
+        window.onload = () => { renderProducts(); renderReviews(); };
+    </script>
+</body>
+</html>
