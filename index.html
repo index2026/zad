@@ -46,7 +46,6 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        /* حل مشكلة السكرول الجانبي (الهيدر بيطلع يمين وشمال) */
         html, body { 
             overflow-x: hidden; 
             width: 100%;
@@ -56,10 +55,60 @@
             -webkit-font-smoothing: antialiased; 
         }
 
-        .news-ticker { background: linear-gradient(90deg, var(--gold), #ffd700); color: var(--primary); padding: 8px 0; font-weight: 900; font-size: 0.95rem; text-align: center; overflow: hidden; white-space: nowrap; box-shadow: 0 2px 10px rgba(0,0,0,0.1); width: 100%; position: relative; z-index: 100;}
-        .ticker-text { display: inline-block; animation: moveTicker 25s linear infinite; }
-        /* تغيير من 100vw إلى 100% لمنع الاهتزاز */
-        @keyframes moveTicker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        /* الهيدر العلوي الجديد */
+        .top-navbar {
+            background-color: #ffffff;
+            width: 100%;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 100;
+        }
+
+        [data-theme="dark"] .top-navbar {
+            background-color: var(--bg-card);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+        }
+
+        .nav-brand {
+            font-weight: 900;
+            color: var(--primary);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        [data-theme="dark"] .nav-brand {
+            color: var(--text-main);
+        }
+
+        /* شكل جديد لزر الوضع الليلي ليتناسب مع الهيدر الأبيض */
+        .theme-toggle-nav { 
+            background: rgba(0, 0, 0, 0.05); 
+            border: 1px solid rgba(0, 0, 0, 0.1); 
+            color: var(--primary); 
+            width: 40px;
+            height: 40px;
+            border-radius: 50%; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer; 
+            font-size: 1.1rem; 
+        }
+        
+        [data-theme="dark"] .theme-toggle-nav {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .theme-toggle-nav:hover { background: var(--gold); color: var(--primary); transform: scale(1.05); border-color: var(--gold); }
 
         header { 
             background: linear-gradient(135deg, rgba(18, 44, 30, 0.98) 0%, rgba(31, 74, 51, 0.98) 100%), url('https://www.transparenttextures.com/patterns/arabesque.png');
@@ -75,32 +124,11 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 30px 15px;
-            width: 95%; /* التحكم في العرض للموبايل */
+            width: 95%;
             max-width: 800px;
             margin: 0 auto;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
         }
-
-        /* شكل جديد أنيق لزر الوضع الليلي */
-        .theme-toggle { 
-            position: absolute; 
-            top: 15px; 
-            left: 15px; /* يمين الشاشة في الـ LTR، يسار في RTL */
-            background: rgba(255, 255, 255, 0.15); 
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            color: #fff; 
-            width: 40px;
-            height: 40px;
-            border-radius: 50%; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer; 
-            font-size: 1.1rem; 
-            z-index: 10; 
-        }
-        .theme-toggle:hover { background: var(--gold); color: var(--primary); transform: scale(1.05); }
 
         .logo { width: 110px; height: 110px; border-radius: 50%; border: 2px solid var(--gold); box-shadow: 0 0 15px rgba(229, 184, 11, 0.3); margin-bottom: 15px; background-color: white; object-fit: contain; animation: float 4s ease-in-out infinite; }
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
@@ -130,7 +158,6 @@
         .product-image-container { position: relative; width: 100%; height: 200px; overflow: hidden; }
         .product-image-container img { width: 100%; height: 100%; object-fit: cover; }
         
-        /* شكل السعر الجديد الأنيق (صغير وفي الأعلى) */
         .price-badge { 
             background: rgba(255, 255, 255, 0.95); 
             backdrop-filter: blur(4px); 
@@ -147,7 +174,6 @@
             gap: 8px;
             z-index: 2;
         }
-        /* نقله لأعلى اليمين لعدم تغطية تفاصيل الصورة */
         .price-badge.absolute-badge { position: absolute; top: 10px; right: 10px; }
         .price-badge.static-badge { margin: 15px auto 0; width: fit-content; }
         
@@ -219,23 +245,25 @@
 
         @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } }
 
-        /* تعديلات الشاشات الكبيرة لتظل مناسبة */
         @media (min-width: 768px) {
             header h1 { font-size: 3rem; }
             .logo { width: 130px; height: 130px; }
             .products-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
             .review-card { width: 260px; }
             .review-img { height: 350px; }
-            .theme-toggle { top: 20px; left: 20px; width: 45px; height: 45px; font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="news-ticker"><span class="ticker-text">🎉 خصومات حصرية بمناسبة انطلاق الموقع! سارع باختيار باقتك قبل انتهاء العرض... جودة تعليمية عالية لأطفالك 🎉</span></div>
+    <div class="top-navbar">
+        <div class="nav-brand"><i class="fas fa-book-open"></i> زاد</div>
+        <button class="theme-toggle-nav" onclick="toggleTheme()" id="themeBtn" title="تغيير المظهر">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
 
     <header>
-        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" title="تغيير المظهر"><i class="fas fa-moon"></i></button>
         <div class="glass-panel" data-aos="zoom-in" data-aos-duration="800">
             <img src="logo.jpg" alt="لوجو مكتبة زاد" class="logo" onerror="this.style.display='none'">
             <h1>مكتبة زاد</h1>
@@ -352,7 +380,6 @@
                     `;
 
                     productsList.forEach((product, pIndex) => {
-                        // السعر بالشكل الجديد (أبيض نقي ومصغر)
                         let priceHtml = `<span class="new-price">${product.price} ج.م</span>`;
                         if (product.oldPrice && product.oldPrice > 0) {
                             priceHtml = `<span class="old-price">${product.oldPrice} ج.م</span> <span class="new-price">${product.price} ج.م</span>`;
