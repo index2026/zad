@@ -22,6 +22,70 @@ const siteProducts = [
         "img": "images/Gemini_Generated_Image_ebltlkebltlkeblt.png",
         "category": "Silver - الباقة الفضية",
         "description": ""
+    },
+    {
+        "title": "فيديوهات حركة وتمارين للأطفال (25 فيديو)",
+        "price": "99",
+        "oldPrice": "385",
+        "img": "images/Gemini_Generated_Image_9s19hm9s19hm9s19.png",
+        "category": "Silver - الباقة الفضية",
+        "description": ""
+    },
+    {
+        "title": "السيرة النبوية الكاملة (قصص الأنبياء + جزء عم + قصة سيدنا محمد)",
+        "price": "149",
+        "oldPrice": "770",
+        "img": "images/Gemini_Generated_Image_pc026opc026opc02.png",
+        "category": "Gold - الباقة الذهبية",
+        "description": ""
+    },
+    {
+        "title": "تعليم جزء تبارك بالتكرار",
+        "price": "149",
+        "oldPrice": "770",
+        "img": "images/Gemini_Generated_Image_c5zdoqc5zdoqc5zd.png",
+        "category": "Gold - الباقة الذهبية",
+        "description": ""
+    },
+    {
+        "title": "كورس الغة العربية للأطفال",
+        "price": "149",
+        "oldPrice": "770",
+        "img": "images/Gemini_Generated_Image_uex7k3uex7k3uex7.png",
+        "category": "Gold - الباقة الذهبية",
+        "description": ""
+    },
+    {
+        "title": "باقة الحركة والنشاط (40 فيديو)",
+        "price": "149",
+        "oldPrice": "768",
+        "img": "images/Gemini_Generated_Image_hlkz5ihlkz5ihlkz.png",
+        "category": "Gold - الباقة الذهبية",
+        "description": ""
+    },
+    {
+        "title": "باقة نور الإسلام المجموعة الكاملة (90 حلقة)",
+        "price": "199",
+        "oldPrice": "1135",
+        "img": "images/Gemini_Generated_Image_umg3kyumg3kyumg3.png",
+        "category": "Platinum - البلاتينية",
+        "description": ""
+    },
+    {
+        "title": "فيديوهات (عم + تبارك + قد سمع) + (كورس لغة عربية + كورس لغة إنجليزية + تحدي قرآني)",
+        "price": "199",
+        "oldPrice": "1135",
+        "img": "images/Gemini_Generated_Image_r4yfymr4yfymr4yf.png",
+        "category": "Platinum - البلاتينية",
+        "description": ""
+    },
+    {
+        "title": "باقة الحركة و النشاط (40 فيديو)",
+        "price": "199",
+        "oldPrice": "1132",
+        "img": "images/Gemini_Generated_Image_3x0lzz3x0lzz3x0l.png",
+        "category": "Platinum - البلاتينية",
+        "description": ""
     }
 ];
 
