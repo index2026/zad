@@ -230,18 +230,32 @@
 
         .category-section.silver-pkg { border: 2px solid #C0C0C0; box-shadow: 0 5px 15px rgba(192, 192, 192, 0.15); background: linear-gradient(135deg, rgba(192, 192, 192, 0.05) 0%, var(--bg-card) 100%); }
         .category-section.gold-pkg { border: 2px solid #FFD700; box-shadow: 0 5px 15px rgba(255, 215, 0, 0.15); background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, var(--bg-card) 100%); }
-        .category-section.vip-pkg { border: 2px solid var(--gold); box-shadow: 0 0 15px rgba(229, 184, 11, 0.3); background: linear-gradient(135deg, rgba(229, 184, 11, 0.1) 0%, var(--bg-card) 100%); animation: neonGlow 3s infinite alternate; position: relative; overflow: hidden; }
+        .category-section.vip-pkg { border: 2px solid var(--gold); box-shadow: 0 0 15px rgba(229, 184, 11, 0.3); background: linear-gradient(135deg, rgba(229, 184, 11, 0.1) 0%, var(--bg-card) 100%); animation: neonGlow 3s infinite alternate; }
         
+        /* 🌟 الباقة البلاتينية الجديدة 🌟 */
+        .category-section.platinum-pkg { 
+            border: 2px solid #a0b2c6; /* لون بلاتيني مائل للأزرق الفضي */
+            box-shadow: 0 0 15px rgba(160, 178, 198, 0.4); 
+            background: linear-gradient(135deg, rgba(160, 178, 198, 0.1) 0%, var(--bg-card) 100%); 
+            animation: platinumGlow 2.5s infinite alternate; 
+            position: relative; 
+            overflow: hidden; 
+        }
+
         @keyframes neonGlow { 0% { box-shadow: 0 0 10px rgba(229, 184, 11, 0.2); } 100% { box-shadow: 0 0 25px rgba(229, 184, 11, 0.6); } }
+        @keyframes platinumGlow { 0% { box-shadow: 0 0 10px rgba(160, 178, 198, 0.3); } 100% { box-shadow: 0 0 30px rgba(160, 178, 198, 0.7); } }
 
         [data-theme="dark"] .category-section.silver-pkg { border-color: #5a6672; background: linear-gradient(135deg, rgba(168, 184, 200, 0.05) 0%, var(--bg-card) 100%); }
         [data-theme="dark"] .category-section.gold-pkg { border-color: #998100; background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, var(--bg-card) 100%); }
         [data-theme="dark"] .category-section.vip-pkg { border-color: #dcb316; background: linear-gradient(135deg, rgba(220, 179, 22, 0.1) 0%, var(--bg-card) 100%); }
+        [data-theme="dark"] .category-section.platinum-pkg { border-color: #b8cde6; background: linear-gradient(135deg, rgba(184, 205, 230, 0.1) 0%, var(--bg-card) 100%); }
 
         .category-title { font-size: 1.3rem; color: var(--primary); margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px dashed var(--border-color); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
         .category-price-tag { background: linear-gradient(45deg, var(--gold), #ffd700); color: var(--primary); padding: 5px 15px; border-radius: 30px; font-weight: 900; font-size: 1.1rem; box-shadow: 0 2px 8px rgba(229, 184, 11, 0.4);}
         
-        /* 🌟 شريط الأكثر مبيعاً الجديد (Ribbon) 🌟 */
+        .platinum-pkg .category-price-tag { background: linear-gradient(45deg, #a0b2c6, #e6ebf1); box-shadow: 0 2px 8px rgba(160, 178, 198, 0.5); }
+
+        /* 🌟 شريط الأكثر مبيعاً مع تأثير جذب احترافي (نبض) 🌟 */
         .best-seller-ribbon {
             position: absolute;
             top: 25px;
@@ -257,6 +271,13 @@
             text-align: center;
             letter-spacing: 0.5px;
             pointer-events: none;
+            animation: attractivePulse 2s infinite;
+        }
+
+        @keyframes attractivePulse {
+            0% { transform: rotate(-45deg) scale(1); box-shadow: 0 4px 15px rgba(255, 71, 87, 0.5); }
+            50% { transform: rotate(-45deg) scale(1.08); box-shadow: 0 8px 25px rgba(255, 71, 87, 0.8); }
+            100% { transform: rotate(-45deg) scale(1); box-shadow: 0 4px 15px rgba(255, 71, 87, 0.5); }
         }
 
         .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); gap: 30px 20px; } /* مسافة أكبر لأسفل بسبب السعر */
@@ -265,7 +286,6 @@
         .product-card { 
             background: var(--bg-body); border-radius: 12px; border: 1px solid var(--border-color); 
             display: flex; flex-direction: column; transition: all 0.3s ease; position: relative;
-            /* تم إزالة overflow:hidden من الكارت نفسه ليظهر السعر أعلى الصورة بنصفه */
         }
         
         .product-card-inner {
@@ -550,11 +570,14 @@
                         catClass = 'gold-pkg';
                     } else if (catLower.includes('نخب') || catLower.includes('vip') || catLower.includes('elite')) {
                         catClass = 'vip-pkg';
+                    } else if (catLower.includes('بلاتين') || catLower.includes('platinum')) {
+                        // 🌟 إضافة التعرف التلقائي على الباقة البلاتينية 🌟
+                        catClass = 'platinum-pkg';
                     }
 
-                    let isBestSeller = (catClass === 'vip-pkg' || catLower.includes('vip') || catLower.includes('نخب')); 
+                    // 🌟 تفعيل شريط "الأكثر مبيعاً" للباقة البلاتينية بجانب الـ VIP 🌟
+                    let isBestSeller = (catClass === 'vip-pkg' || catClass === 'platinum-pkg' || catLower.includes('vip') || catLower.includes('بلاتين') || catLower.includes('نخب')); 
                     
-                    // شريط الأكثر مبيعاً الجديد الخاص بباقة VIP
                     let ribbonHtml = isBestSeller ? `<div class="best-seller-ribbon">الأكثر مبيعاً</div>` : '';
                     
                     let sectionHtml = `
