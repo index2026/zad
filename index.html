@@ -53,6 +53,11 @@
             color: var(--text-main); 
             scroll-behavior: smooth; 
             -webkit-font-smoothing: antialiased; 
+            /* كود CSS لمنع تحديد النصوص */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
         /* 🌟 شاشة الدخول الاحترافية (Preloader) 🌟 */
@@ -316,12 +321,14 @@
 
         .product-details { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; text-align: center; }
         .product-details h3 { font-size: 1.1rem; color: var(--text-main); margin-bottom: 15px; line-height: 1.4; font-weight: 800; }
+        .product-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 15px; line-height: 1.6; }
 
         .btn-buy { 
             background: linear-gradient(45deg, var(--whatsapp), #128C7E); color: white; border: none; 
             padding: 10px; width: 100%; border-radius: 8px; font-size: 1rem; font-weight: 900; 
             cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; 
             text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; position: relative; overflow: hidden;
+            margin-top: auto; /* لضمان بقاء الزر في الأسفل دائماً */
         }
         .btn-buy:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4); }
 
@@ -553,12 +560,19 @@
                             imageSection = `<div class="price-badge static-badge">${priceHtml}</div>`;
                         }
                         
+                        // إضافة الوصف هنا
+                        let descHtml = '';
+                        if (product.description && product.description.trim() !== '') {
+                            descHtml = `<p class="product-desc">${product.description}</p>`;
+                        }
+                        
                         let delay = (pIndex % 3) * 50;
                         sectionHtml += `
                             <div class="product-card" data-aos="zoom-in" data-aos-delay="${delay}">
                                 ${imageSection}
                                 <div class="product-details">
                                     <h3>${product.title}</h3>
+                                    ${descHtml}
                                     <a href="#" onclick="orderProduct(event, '${product.title}', '${product.price}')" class="btn-buy">
                                         <i class="fab fa-whatsapp fa-lg"></i> احجزها الآن
                                     </a>
@@ -624,6 +638,24 @@
             loadData();
             setTimeout(animateCounter, 800); 
         };
+
+        // ----------------------------------------------------
+        // كود منع النسخ والنقر بزر الماوس الأيمن (لحماية الصفحة)
+        // ----------------------------------------------------
+        document.addEventListener('contextmenu', event => event.preventDefault()); // منع الكليك يمين
+        document.addEventListener('selectstart', event => event.preventDefault()); // منع التحديد بالماوس
+        document.addEventListener('copy', event => event.preventDefault());        // منع النسخ (Ctrl+C)
+        document.addEventListener('cut', event => event.preventDefault());         // منع القص (Ctrl+X)
+        document.addEventListener('keydown', function(event) {
+            // منع الاختصارات: Ctrl+C, Ctrl+V, Ctrl+U (عرض المصدر), Ctrl+S (حفظ الصفحة), Ctrl+P (الطباعة)
+            if (event.ctrlKey && (event.key === 'c' || event.key === 'C' || 
+                                  event.key === 'v' || event.key === 'V' || 
+                                  event.key === 'u' || event.key === 'U' || 
+                                  event.key === 's' || event.key === 'S' || 
+                                  event.key === 'p' || event.key === 'P')) {
+                event.preventDefault();
+            }
+        });
     </script>
 </body>
 </html>
